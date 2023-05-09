@@ -20,13 +20,12 @@ export const ContactList = ({ contactNames, deleteItem }) => {
 };
 
 ContactList.propTypes = {
-  contactNames: PropTypes.oneOfType([
-    PropTypes.arrayOf({
+  contactNames: PropTypes.arrayOf(
+    PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
       number: PropTypes.string,
-    }),
-    PropTypes.array,
-  ]).isRequired,
+    })
+  ).isRequired,
   deleteItem: PropTypes.func.isRequired,
 };

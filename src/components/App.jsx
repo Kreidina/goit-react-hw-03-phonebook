@@ -10,16 +10,42 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount = () => {
+    const contacts = localStorage.getItem('Contacts');
+    const parseContacts = JSON.parse(contacts);
+    if (parseContacts) {
+      this.setState({
+        contacts: parseContacts,
+      });
+    }
+  };
+
+  componentDidUpdate = prevState => {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('Contacts', JSON.stringify(this.state.contacts));
+    }
+  };
+
   addContact = data => {
     const idData = nanoid();
     const { name, number } = data;
+    const { contacts } = this.state;
 
-    const isContactExsist = this.state.contacts.some(
+    const isContactExsist = contacts.some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
+
+    const isNumberExsist = contacts.some(
+      contact => contact.number.toLowerCase() === number.toLowerCase()
+    );
+
     if (isContactExsist) {
       return alert(`${name} to already in contacts`);
     }
+    if (isNumberExsist) {
+      return alert(`${number} to already in contacts`);
+    }
+
     const newContact = {
       id: idData,
       name,
@@ -41,22 +67,6 @@ class App extends Component {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
-  };
-
-  componentDidMount = () => {
-    const contacts = localStorage.getItem('Contacts');
-    const parseContacts = JSON.parse(contacts);
-    if (parseContacts) {
-      this.setState({
-        contacts: parseContacts,
-      });
-    }
-  };
-
-  componentDidUpdate = prevState => {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('Contacts', JSON.stringify(this.state.contacts));
-    }
   };
 
   render() {
